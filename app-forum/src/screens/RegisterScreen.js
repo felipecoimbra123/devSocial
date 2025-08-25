@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
+    textTransform: 'uppercase',
     fontWeight: 'bold',
     marginBottom: 30,
     color: '#333',
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 8,
     marginBottom: 15,
-    backgroundColor: '#fff',
+    backgroundColor: '#d3d3d3',
   },
   loginText: {
     marginTop: 20,

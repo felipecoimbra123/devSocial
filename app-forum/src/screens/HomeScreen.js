@@ -264,7 +264,7 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.mainTitle}>Fórum do App</Text>
         <View style={styles.headerButtons}>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.profileButton}>
-            <Ionicons name="person-circle-outline" size={30} color="#007bff" />
+            <Ionicons name="person-circle-outline" size={30} color="white" />
           </TouchableOpacity>
           <Button title="Sair" onPress={handleLogout} />
         </View>
@@ -343,12 +343,11 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    backgroundColor: '#fff',
+    backgroundColor: '#95B9C7',
   },
   mainTitle: {
     fontSize: 26,
     fontWeight: 'bold',
-    color: '#333',
   },
   headerButtons: {
     flexDirection: 'row',
@@ -385,6 +384,9 @@ const styles = StyleSheet.create({
     padding: 20,
     marginHorizontal: 15,
     marginBottom: 15,
+    maxWidth: 832,
+    alignSelf: "center",
+    width: "100%",
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
