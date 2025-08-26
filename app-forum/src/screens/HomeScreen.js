@@ -219,11 +219,7 @@ const HomeScreen = ({ navigation }) => {
     console.log('HomeScreen: usuário clicou em sair')
     Alert.alert('Sair', 'Deseja realmente sair?', [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sair', onPress: async () => {
-        console.log('HomeScreen: logout confirmado')
-        await signOut();
-        console.log('HomeScreen: signOut() finalizado');
-      }}
+      { text: 'Sair', onPress: signOut() }
     ]);
   };
 
