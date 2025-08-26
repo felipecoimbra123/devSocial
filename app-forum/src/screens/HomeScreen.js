@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   View, Text, Button, StyleSheet, Alert,
-  FlatList, TextInput, TouchableOpacity, ActivityIndicator, Image
+  FlatList, TextInput, TouchableOpacity, ActivityIndicator, Image, ScrollView
 } from 'react-native';
 import AuthContext from '../context/AuthContext';
 import api from '../services/api';
@@ -21,6 +21,7 @@ const HomeScreen = ({ navigation }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [userLikes, setUserLikes] = useState({});
+  const [userFavorites, setUserFavorites] = useState({})
   const [currentUserId, setCurrentUserId] = useState(null);
   const [newPostImageUri, setNewPostImageUri] = useState(null); // <-- Novo: URI da imagem do novo post
 
@@ -56,6 +57,7 @@ const HomeScreen = ({ navigation }) => {
       // Atualiza o estado de likes do usuário com base nos posts buscados
       // Para o feedback visual persistente, esta parte é crucial
       let initialUserLikes = {};
+      let initialUserFavorites = {}
       if (currentUserId) {
         try {
           const likesResponse = await api.get(`/users/${currentUserId}/likes`, {
@@ -64,11 +66,18 @@ const HomeScreen = ({ navigation }) => {
           likesResponse.data.forEach(like => {
             initialUserLikes[like.post_id] = true;
           });
+          const favoritesResponse = await api.get(`/users/${currentUserId}/favorites`, {
+            headers: { Authorization: `Bearer ${await AsyncStorage.getItem('userToken')}` }
+          })
+          favoritesResponse.data.forEach(favorite => {
+            initialUserFavorites[favorite.post_id] = true;
+          });
         } catch (likesError) {
           console.error('Erro ao buscar likes do usuário para inicialização:', likesError.response?.data || likesError.message);
         }
       }
       setUserLikes(initialUserLikes);
+      setUserFavorites(initialUserFavorites)
 
       setPosts(response.data);
     } catch (error) {
@@ -189,6 +198,11 @@ const HomeScreen = ({ navigation }) => {
       if (error.response?.status === 401 || error.response?.status === 403) {
         signOut();
       }
+      const response = await api.post(
+        `/posts/${postId}/favorite`,
+        {},
+        { headers: { Authorization: `Bearer ${userToken}` } }
+      );
     }
   };
 
@@ -205,6 +219,13 @@ const HomeScreen = ({ navigation }) => {
         {},
         { headers: { Authorization: `Bearer ${userToken}` } }
       );
+
+      const favorited = response.data.favorited;
+      setUserFavorites(prevFavorites => ({
+        ...prevFavorites,
+        [postId]: favorited,
+      }));
+
       Alert.alert('Sucesso', response.data.message);
     } catch (error) {
       console.error('Erro ao favoritar/desfavoritar:', error.response?.data || error.message);
@@ -252,7 +273,11 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.interactionButton} onPress={() => handleToggleFavorite(item.id)}>
-          <Ionicons name="bookmark-outline" size={24} color="#666" />
+          <Ionicons 
+          name={userFavorites[item.id] ? 'bookmark' : 'bookmark-outline'}
+          size={24}
+          color={userFavorites[item.id] ? 'yellow' : '#666' }
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -270,61 +295,63 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Barra de Pesquisa */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Pesquisar posts por título ou conteúdo..."
-          value={searchTerm}
-          onChangeText={setSearchTerm}
-          onSubmitEditing={fetchPosts}
-        />
-        <TouchableOpacity onPress={fetchPosts} style={styles.searchButton}>
-          <Ionicons name="search" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
+      <ScrollView>
+        {/* Barra de Pesquisa */}
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Pesquisar posts por título ou conteúdo..."
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+            onSubmitEditing={fetchPosts}
+          />
+          <TouchableOpacity onPress={fetchPosts} style={styles.searchButton}>
+            <Ionicons name="search" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
 
-      {/* Seção para criar novo post */}
-      <View style={styles.createPostContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Título do seu post"
-          value={newPostTitle}
-          onChangeText={setNewPostTitle}
-        />
-        <TextInput
-          style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
-          placeholder="O que você quer compartilhar?"
-          value={newPostContent}
-          onChangeText={setNewPostContent}
-          multiline
-        />
-        <TouchableOpacity onPress={pickPostImage} style={styles.imagePickerButton}>
-          <Ionicons name="image-outline" size={24} color="#007bff" />
-          <Text style={styles.imagePickerButtonText}>Adicionar Imagem</Text>
-        </TouchableOpacity>
-        {newPostImageUri && (
-          <Image source={{ uri: newPostImageUri }} style={styles.previewImage} />
+        {/* Seção para criar novo post */}
+        <View style={styles.createPostContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Título do seu post"
+            value={newPostTitle}
+            onChangeText={setNewPostTitle}
+          />
+          <TextInput
+            style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
+            placeholder="O que você quer compartilhar?"
+            value={newPostContent}
+            onChangeText={setNewPostContent}
+            multiline
+          />
+          <TouchableOpacity onPress={pickPostImage} style={styles.imagePickerButton}>
+            <Ionicons name="image-outline" size={24} color="#007bff" />
+            <Text style={styles.imagePickerButtonText}>Adicionar Imagem</Text>
+          </TouchableOpacity>
+          {newPostImageUri && (
+            <Image source={{ uri: newPostImageUri }} style={styles.previewImage} />
+          )}
+          <Button
+            title={isSubmitting ? "Publicando..." : "Criar Post"}
+            onPress={handleCreatePost}
+            disabled={isSubmitting}
+          />
+        </View>
+
+        {/* Lista de Posts */}
+        {loadingPosts ? (
+          <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={posts}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderPostItem}
+            contentContainerStyle={styles.postList}
+            ListEmptyComponent={<Text style={styles.noPostsText}>Nenhum post encontrado. Tente ajustar sua pesquisa ou seja o primeiro a postar!</Text>}
+          />
         )}
-        <Button
-          title={isSubmitting ? "Publicando..." : "Criar Post"}
-          onPress={handleCreatePost}
-          disabled={isSubmitting}
-        />
-      </View>
-
-      {/* Lista de Posts */}
-      {loadingPosts ? (
-        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: 20 }} />
-      ) : (
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderPostItem}
-          contentContainerStyle={styles.postList}
-          ListEmptyComponent={<Text style={styles.noPostsText}>Nenhum post encontrado. Tente ajustar sua pesquisa ou seja o primeiro a postar!</Text>}
-        />
-      )}
+    </ScrollView >
     </View>
   );
 };
