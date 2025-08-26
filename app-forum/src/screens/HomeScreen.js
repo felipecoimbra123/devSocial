@@ -10,6 +10,7 @@ import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; // <-- Novo
+import { CommonActions } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation }) => {
   const { signOut } = useContext(AuthContext);
@@ -215,10 +216,13 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleLogout = () => {
+    console.log('HomeScreen: usuário clicou em sair')
     Alert.alert('Sair', 'Deseja realmente sair?', [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Sair', onPress: async () => {
+        console.log('HomeScreen: logout confirmado')
         await signOut();
+        console.log('HomeScreen: signOut() finalizado');
       }}
     ]);
   };

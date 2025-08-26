@@ -1,6 +1,6 @@
 // src/AppNavigator.js
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator } from 'react-native';
@@ -16,6 +16,11 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
   const { userToken, isLoading } = useContext(AuthContext);
+  console.log('AppNavigator: token do usuário atual:', userToken)
+
+  useEffect(() => {
+    console.log('AppNavigator renderizou. userToken mudou para:', userToken)
+  }, [userToken])
 
   if (isLoading) {
     return (
@@ -26,7 +31,7 @@ const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer key={userToken}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {userToken ? (
           <>

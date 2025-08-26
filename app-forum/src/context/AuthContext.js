@@ -14,11 +14,13 @@ export const AuthProvider = ({ children }) => {
 
   // Função para salvar o token e o usuário (se necessário)
   const signIn = async (token, userData) => {
+    console.log('AuthContext: iniciando signIn() com token:', token);
     try {
       await AsyncStorage.setItem('userToken', token);
       // Opcional: salvar dados do usuário, se forem muitos, ou apenas o token
       // await AsyncStorage.setItem('userData', JSON.stringify(userData));
       setUserToken(token);
+      console.log('AuthContext: userToken definido para:', token);
     } catch (e) {
       console.error('Erro ao salvar token/dados no AsyncStorage', e);
     }
@@ -38,10 +40,15 @@ export const AuthProvider = ({ children }) => {
   // Carregar o token ao iniciar o aplicativo
   useEffect(() => {
     const loadToken = async () => {
+      console.log('AuthContext: carregando token do AsyncStorage...');
       try {
         const token = await AsyncStorage.getItem('userToken');
         if (token) {
           setUserToken(token);
+          console.log('AuthContext: token carregado do AsyncStorage:', token);
+        }
+        else {
+          console.log('AuthContext: nenhum token encontrado no AsyncStorage');
         }
       } catch (e) {
         console.error('Erro ao carregar token do AsyncStorage', e);
