@@ -463,8 +463,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   postCard: {
-    backgroundColor: '#fff',
-    padding: 15,
+    backgroundColor: '#d8d4d4ff',
+    padding: 25,
+    maxWidth: 700,
+    width: '100%',
+    margin: 'auto',
     borderRadius: 10,
     marginBottom: 15,
     shadowColor: '#000',

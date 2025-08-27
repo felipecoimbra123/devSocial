@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   profileInfoCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#d8d4d4ff',
     padding: 20,
     margin: 15,
     borderRadius: 10,
@@ -218,14 +218,13 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 15,
-    borderWidth: 2,
-    borderColor: '#007bff',
+    borderWidth: 1,
   },
   profilePicturePlaceholder: {
     marginBottom: 15,
   },
   username: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 5,
@@ -266,7 +265,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#666',
+    color: 'black',
   },
   activeTabText: {
     color: '#007bff',
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
   },
   postCard: {
     backgroundColor: '#fff',
-    padding: 15,
+    padding: 30,
     borderRadius: 10,
     marginBottom: 10,
     shadowColor: '#000',
