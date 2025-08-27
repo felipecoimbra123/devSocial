@@ -7,7 +7,7 @@
 - [x] **Estilização Geral:** Refatorar os estilos (`StyleSheet`) para criar um tema visual coeso e atraente para todo o aplicativo, considerando cores, fontes, espaçamento e sombras.
 - [x] **Componentização:** Transformar partes da UI que se repetem (como cards de posts e botões de interação) em componentes reutilizáveis para organizar melhor o código.
 - [x] **Responsividade:** Otimizar a interface para diferentes tamanhos de tela (desktop, tablet, celular) usando `Dimensions` ou flexbox de forma mais avançada.
-- [ ] **Feedback Visual — Botão "Favoritar":** Alterar a cor ou ícone ao clicar.
+- [x] **Feedback Visual — Botão "Favoritar":** Alterar a cor ou ícone ao clicar.
 - [ ] **Feedback Visual — Loading:** Adicionar estados de loading mais visuais para requisições de rede.
 
 ---
