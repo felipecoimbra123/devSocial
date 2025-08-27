@@ -34,14 +34,16 @@ const AppNavigator = () => {
     <NavigationContainer key={userToken}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {userToken ? (
-          <>
+          <Stack.Group>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="PostDetail" component={PostDetailScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-          </>
+          </Stack.Group>
         ) : (
-          <Stack.Screen name="Auth" component={AuthStack} />
+          <Stack.Group>
+            <Stack.Screen name="Auth" component={AuthStack} />
+          </Stack.Group>
         )}
       </Stack.Navigator>
     </NavigationContainer>

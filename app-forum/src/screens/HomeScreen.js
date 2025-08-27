@@ -23,6 +23,7 @@ const HomeScreen = ({ navigation }) => {
   const [userLikes, setUserLikes] = useState({});
   const [userFavorites, setUserFavorites] = useState({})
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentUsername, setCurrentUsername] = useState(null);
   const [newPostImageUri, setNewPostImageUri] = useState(null); // <-- Novo: URI da imagem do novo post
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const HomeScreen = ({ navigation }) => {
         if (userDataString) {
           const userData = JSON.parse(userDataString);
           setCurrentUserId(userData.id);
+          setCurrentUsername(userData.username)
         }
       } catch (error) {
         console.error('Erro ao carregar dados do usuário do AsyncStorage:', error);
@@ -276,7 +278,7 @@ const HomeScreen = ({ navigation }) => {
           <Ionicons 
           name={userFavorites[item.id] ? 'bookmark' : 'bookmark-outline'}
           size={24}
-          color={userFavorites[item.id] ? 'yellow' : '#666' }
+          color={userFavorites[item.id] ? 'gold' : '#666' }
           />
         </TouchableOpacity>
       </View>
@@ -288,6 +290,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={styles.header}>
         <Text style={styles.mainTitle}>Fórum do App</Text>
         <View style={styles.headerButtons}>
+          <Text style={styles.usernameText}>{currentUsername}</Text>
           <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.profileButton}>
             <Ionicons name="person-circle-outline" size={30} color="white" />
           </TouchableOpacity>
@@ -379,6 +382,11 @@ const styles = StyleSheet.create({
   headerButtons: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  usernameText: {
+  fontSize: 16,
+  marginRight: 10,
+  fontWeight: 'bold',
   },
   profileButton: {
     marginRight: 15,

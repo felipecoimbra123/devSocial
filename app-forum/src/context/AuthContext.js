@@ -17,8 +17,7 @@ export const AuthProvider = ({ children }) => {
     console.log('AuthContext: iniciando signIn() com token:', token);
     try {
       await AsyncStorage.setItem('userToken', token);
-      // Opcional: salvar dados do usuário, se forem muitos, ou apenas o token
-      // await AsyncStorage.setItem('userData', JSON.stringify(userData));
+      await AsyncStorage.setItem('userData', JSON.stringify(userData));
       setUserToken(token);
       console.log('AuthContext: userToken definido para:', token);
     } catch (e) {
@@ -31,6 +30,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log('AuthContext: Iniciando signOut(). Tentando remover userToken.'); // <-- Adicione este log
       await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userData')
       setUserToken(null);
       console.log('AuthContext: userToken definido para null e AsyncStorage limpo.'); // <-- Adicione este log
     } catch (e) {
