@@ -69,7 +69,8 @@ const EditProfileScreen = ({ route, navigation }) => {
       if (selectedImageUri) {
         // Se uma nova imagem foi selecionada, faça o upload primeiro
         const formData = new FormData();
-        const filename = selectedImageUri.split('/').pop(); // Extrai o nome do arquivo da URI
+        const imageBlob = await fetch(selectedImageUri).then(res => res.blob());
+        const filename = `profile_picture_${initialUser.id}_${Date.now()}.jpeg` // Extrai o nome do arquivo da URI
         const match = /\.(\w+)$/.exec(filename); // Pega a extensão
         const type = match ? `image/${match[1]}` : 'image'; // Tenta inferir o tipo MIME
 
@@ -81,7 +82,7 @@ const EditProfileScreen = ({ route, navigation }) => {
             type: type,
         };
 
-        formData.append('profilePicture', imageFile); // 'profilePicture' deve corresponder ao nome do campo no Multer
+        formData.append('profilePicture', imageBlob, filename); // 'profilePicture' deve corresponder ao nome do campo no Multer
 
         try {
           const uploadResponse = await api.post('/upload/profile-picture', formData, {
