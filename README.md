@@ -30,7 +30,7 @@ superior da HomeScreen ou em outro local visível.
 
 - [x] **Bug do Logout:** Corrigir o problema do botão "Sair" na `HomeScreen` que não redireciona para a tela de login.  
 - [ ] **Gerenciamento de Erros:** Melhorar a exibição de mensagens de erro, tornando-as mais amigáveis e informativas.
-- [ ] **Refatoração do Código:** Otimizar a lógica de requisições de API para evitar repetição, como a obtenção do `userToken` em múltiplas funções.
+- [x] **Refatoração do Código:** Otimizar a lógica de requisições de API para evitar repetição, como a obtenção do `userToken` em múltiplas funções.
 
 ---
 
